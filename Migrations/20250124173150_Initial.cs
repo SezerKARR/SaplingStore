@@ -15,6 +15,21 @@ namespace SaplingStore.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "SaplingCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CategoryName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SaplingCategories", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Saplings",
                 columns: table => new
                 {
@@ -23,13 +38,24 @@ namespace SaplingStore.Migrations
                     Name = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Heights = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SaplingCategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Saplings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Saplings_SaplingCategories_SaplingCategoryId",
+                        column: x => x.SaplingCategoryId,
+                        principalTable: "SaplingCategories",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Saplings_SaplingCategoryId",
+                table: "Saplings",
+                column: "SaplingCategoryId");
         }
 
         /// <inheritdoc />
@@ -37,6 +63,9 @@ namespace SaplingStore.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Saplings");
+
+            migrationBuilder.DropTable(
+                name: "SaplingCategories");
         }
     }
 }

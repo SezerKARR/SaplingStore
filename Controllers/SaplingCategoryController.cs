@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SaplingStore.Abstract;
 using SaplingStore.Data;
 using SaplingStore.DTOs;
-using SaplingStore.DTOs.Sapling;
 using SaplingStore.DTOs.SaplingCategory;
+using SaplingStore.DTOs.SaplingDTO;
 using SaplingStore.Interfaces;
 using SaplingStore.Mapper;
 using SaplingStore.Models;
@@ -23,7 +23,6 @@ public class SaplingCategoryController:Controller
         _mapper = mapper;
         _appDbContext = appDbContext;
         this._saplingCategoryRepository = saplingCategoryRepository;
-        saplingCategoryRepository = saplingCategoryRepository;
     }
 
     [HttpPost]

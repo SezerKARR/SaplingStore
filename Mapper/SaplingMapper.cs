@@ -1,12 +1,11 @@
 using SaplingStore.DTOs;
-using SaplingStore.DTOs.Sapling;
 using SaplingStore.Models;
 
 namespace SaplingStore.Mapper;
 
 public static class SaplingMapper
 {
-    // public static SaplingDto ToSaplingDto(this Sapling saplingModel)
+    // public static SaplingDto ToSaplingDto(this SaplingDTO saplingModel)
     // {
     //     return new SaplingDto()
     //     {
@@ -15,9 +14,9 @@ public static class SaplingMapper
     //         Heights = saplingModel.Heights,
     //     };
     // }
-    // public static Sapling ToSaplingFromCreateDto(this CreateSaplingRequestDto saplingRequestDto)
+    // public static SaplingDTO ToSaplingFromCreateDto(this CreateSaplingRequestDto saplingRequestDto)
     // {
-    //     return new Sapling()
+    //     return new SaplingDTO()
     //     {
     //         Name = saplingRequestDto.Name,
     //         Heights = saplingRequestDto.Heights,

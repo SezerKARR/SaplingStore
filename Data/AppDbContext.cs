@@ -10,5 +10,6 @@ public class AppDbContext:DbContext
         
     }
     public DbSet<Sapling> Saplings { get; set; }
+    public DbSet<SaplingCategory> SaplingCategories { get; set; }
     
 }

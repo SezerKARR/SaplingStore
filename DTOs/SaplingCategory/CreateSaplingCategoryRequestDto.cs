@@ -1,4 +1,5 @@
 using SaplingStore.Interfaces;
+using SaplingStore.Models;
 
 namespace SaplingStore.DTOs.SaplingCategory;
 

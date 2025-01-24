@@ -53,4 +53,9 @@ public  class ClassRepository<T> :IClassRepository<T> where T : class, IEntity
         await _context.SaveChangesAsync();
         return model;
     }
+
+    public async Task<bool> EntityExists(int id)
+    {
+        return await _context.Set<T>().AnyAsync(x => x.Id == id);
+    }
 }

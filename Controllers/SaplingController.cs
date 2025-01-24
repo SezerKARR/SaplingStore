@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SaplingStore.Abstract;
 using SaplingStore.Data;
 using SaplingStore.DTOs;
-using SaplingStore.DTOs.Sapling;
+using SaplingStore.DTOs.SaplingDTO;
 using SaplingStore.Interfaces;
 using SaplingStore.Mapper;
 using SaplingStore.Models;
@@ -14,23 +14,28 @@ namespace SaplingStore.Controllers;
 [ApiController]
 public class SaplingController:Controller
 {
-    private readonly AppDbContext _appDbContext;
     private readonly IClassRepository<Sapling> _saplingRepository;
+    private readonly IClassRepository<SaplingCategory> _saplingCategoryRepository;
     private readonly IMapper _mapper;
 
-    public SaplingController(IMapper mapper,AppDbContext appDbContext, IClassRepository<Sapling> saplingRepository)
+    public SaplingController(IMapper mapper ,IClassRepository<Sapling> saplingRepository,IClassRepository<SaplingCategory> saplingCategoryRepository)
     {
         _mapper = mapper;
-        _appDbContext = appDbContext;
         _saplingRepository = saplingRepository;
+        _saplingCategoryRepository = saplingCategoryRepository;
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateSaplingRequestDto saplingDto)
+    [HttpPost("{saplingCategoryId}")]
+    public async Task<IActionResult> Create([FromRoute] int saplingCategoryId,  CreateSaplingRequestDto saplingDto)
     {
+        if (!await _saplingCategoryRepository.EntityExists(saplingCategoryId))
+        {
+            return BadRequest("Category does not exist");
+        }
+        
         var sablingModel = _mapper.Map<Sapling>(saplingDto);
+        sablingModel.SaplingCategoryId = saplingCategoryId;
         await _saplingRepository.CreateAsync(sablingModel);
-        return CreatedAtAction(nameof(GetSaplingById), new { id = sablingModel.Id },
+        return CreatedAtAction(nameof(GetSaplingById), new { id = sablingModel },
             _mapper.Map<SaplingDto>(sablingModel));
     }
     [HttpGet]
