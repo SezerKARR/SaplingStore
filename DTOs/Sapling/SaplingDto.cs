@@ -1,6 +1,6 @@
 using SaplingStore.Interfaces;
 
-namespace SaplingStore.DTOs;
+namespace SaplingStore.DTOs.Sapling;
 
 public class SaplingDto:IDto
 {

@@ -1,8 +1,8 @@
 using SaplingStore.Interfaces;
 
-namespace SaplingStore.DTOs;
+namespace SaplingStore.DTOs.Sapling;
 
-public class UpdateSablingRequestDto:IDto
+public class CreateSaplingRequestDto:IDto
 {
     public string? Name { get; set; } 
     public List<float> Heights { get; set; } = new List<float>();
