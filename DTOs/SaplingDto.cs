@@ -1,6 +1,8 @@
-namespace SaplingStore.Dtos;
+using SaplingStore.Interfaces;
 
-public class SaplingDto
+namespace SaplingStore.DTOs;
+
+public class SaplingDto:IDto
 {
     public int SaplingId { get; set; }
     public string? Name { get; set; } 

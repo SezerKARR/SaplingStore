@@ -1,4 +1,4 @@
-using SaplingStore.Dtos;
+using SaplingStore.DTOs;
 using SaplingStore.Models;
 
 namespace SaplingStore.Mapper;

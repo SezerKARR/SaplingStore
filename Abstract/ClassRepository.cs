@@ -1,40 +1,56 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SaplingStore.Data;
 using SaplingStore.Interfaces;
+using SaplingStore.Mapper;
+using SaplingStore.Models;
 
 namespace SaplingStore.Abstract;
 
 public  class ClassRepository<T> :IClassRepository<T> where T : class, IEntity
 {
     private readonly AppDbContext _context;
-
-    public ClassRepository(AppDbContext context)
+    private readonly IMapper _mapping;
+    public ClassRepository(AppDbContext context, IMapper mapping)
     {
+        _mapping = mapping;
         _context = context;
     }
 
-    public Task<List<T>> GetAllAsync()
+    public async Task<List<T>> GetAllAsync()
     {
-        return _context.Set<T>().ToListAsync();
+        return  await _context.Set<T>().ToListAsync();
     }
 
-    public Task<T> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Set<T>().FindAsync(id);
     }
 
-    public Task AddAsync(T entity)
+    public async Task<T> CreateAsync(T entity)
     {
-        throw new NotImplementedException();
+        await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return entity;
     }
 
-    public Task UpdateAsync(T entity)
+    public async Task<T?> UpdateAsync<T1>(int id, T1 dto) where T1 : IDto
     {
-        throw new NotImplementedException();
+        var existing = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+        if (existing == null) return null;
+        _mapping.Map(dto, existing);
+        await _context.SaveChangesAsync();
+        return existing;
     }
 
-    public Task DeleteAsync(int id)
+   
+
+    public async Task<T?> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var model = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+        if(model == null) return null;
+        _context.Set<T>().Remove(model);
+        await _context.SaveChangesAsync();
+        return model;
     }
 }

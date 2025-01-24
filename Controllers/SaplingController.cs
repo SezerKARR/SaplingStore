@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SaplingStore.Abstract;
 using SaplingStore.Data;
-using SaplingStore.Dtos;
+using SaplingStore.DTOs;
 using SaplingStore.Interfaces;
 using SaplingStore.Mapper;
 using SaplingStore.Models;
@@ -13,7 +14,7 @@ public class SaplingController:Controller
 {
     private readonly AppDbContext _appDbContext;
     private readonly IClassRepository<Sapling> _saplingRepository;
-    public SaplingController(AppDbContext appDbContext,IClassRepository<Sapling> repository, IClassRepository<Sapling> saplingRepository)
+    public SaplingController(AppDbContext appDbContext, IClassRepository<Sapling> saplingRepository)
     {
         _appDbContext = appDbContext;
         _saplingRepository = saplingRepository;
@@ -23,8 +24,7 @@ public class SaplingController:Controller
     public async Task<IActionResult> Create([FromBody] CreateSaplingRequestDto saplingDto)
     {
         var sablingModel = saplingDto.ToSaplingFromCreateDto();
-        await _appDbContext.Saplings.AddAsync(sablingModel);
-        await _appDbContext.SaveChangesAsync();
+        await _saplingRepository.CreateAsync(sablingModel);
         return CreatedAtAction(nameof(GetSaplingById), new { id = sablingModel.Id },
             sablingModel.ToSaplingDto());
     }
@@ -39,7 +39,7 @@ public class SaplingController:Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> GetSaplingById([FromRoute] int id)
     {
-        var sapling = await _appDbContext.Saplings.FindAsync(id);
+        var sapling = await _saplingRepository.GetByIdAsync(id);
         if (sapling == null) return NotFound();
         return Ok(sapling.ToSaplingDto());
     }
@@ -47,12 +47,9 @@ public class SaplingController:Controller
     [HttpPut]
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSablingRequestDto updateSablingRequestDto)
-    { 
-        var saplingModel = await _appDbContext.Saplings.FirstOrDefaultAsync(x=>x.Id == id);
+    {
+        var saplingModel = await _saplingRepository.UpdateAsync(id, updateSablingRequestDto);
         if (saplingModel == null) return NotFound();
-        saplingModel.Name = updateSablingRequestDto.Name;
-        saplingModel.Heights = updateSablingRequestDto.Heights;
-        _appDbContext.SaveChanges();
         return Ok(saplingModel.ToSaplingDto());
     }
 
@@ -60,10 +57,8 @@ public class SaplingController:Controller
     [Route("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var saplingMoodel = await _appDbContext.Saplings.FirstOrDefaultAsync(x => x.Id == id);
+        var saplingMoodel = await _saplingRepository.DeleteAsync(id);
         if (saplingMoodel == null) return NotFound();
-        _appDbContext.Saplings.Remove(saplingMoodel);
-        await _appDbContext.SaveChangesAsync();
         return NoContent();
     }
 }
