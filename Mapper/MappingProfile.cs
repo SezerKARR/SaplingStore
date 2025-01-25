@@ -11,15 +11,18 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<SaplingDto, Sapling>();
-        CreateMap<CreateSaplingRequestDto, Sapling>();
-        CreateMap<UpdateSaplingRequestDto, Sapling>();
-        CreateMap<Sapling, SaplingDto>();
-        CreateMap<SaplingCategory, SaplingCategoryDto>();
-        CreateMap<CreateSaplingCategoryRequestDto, SaplingCategory>();
-        CreateMap<SaplingCategoryDto, SaplingCategory>();
-        CreateMap<UpdateSaplingRequestDto, SaplingCategory>();
-        
+        // SAPLING
+        CreateMap<SaplingReadDto, Sapling>(); // SaplingReadDto'dan Sapling'e dönüşüm
+        CreateMap<SaplingCreateDto, Sapling>(); // SaplingCreateDto'dan Sapling'e dönüşüm
+        CreateMap<SaplingUpdateDto, Sapling>(); // SaplingCategoryUpdateDto'dan Sapling'e dönüşüm
+        CreateMap<Sapling, SaplingReadDto>(); // Sapling'den SaplingReadDto'ya dönüşüm
+
+        // SAPLING CATEGORY
+        CreateMap<SaplingCategoryReadDto, SaplingCategory>();
+        CreateMap<SaplingCategory, SaplingCategoryReadDto>()
+            .ForMember(dest => dest.Saplings, opt => opt.MapFrom(src => src.Saplings));
+        CreateMap<SaplingCategoryCreateDto, SaplingCategory>(); // SaplingCategoryCreateDto'dan SaplingCategoryRepository'ye dönüşüm
+        CreateMap<SaplingCategoryUpdateDto, SaplingCategory>(); 
 
         // Create the mapping
     }

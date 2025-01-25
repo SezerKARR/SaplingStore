@@ -1,5 +1,5 @@
 namespace SaplingStore.Interfaces;
 
-public interface IDto
+public interface ICreateDto
 {
 }

@@ -11,59 +11,22 @@ using SaplingStore.Mapper;
 using SaplingStore.Models;
 
 namespace SaplingStore.Controllers;
-[Route("api/[controller]")]
+
+[Route("sapling-store/sapling-category")]
 [ApiController]
-public class SaplingCategoryController:Controller
+public class SaplingCategoryController : BaseController<IClassRepository<SaplingCategory>,SaplingCategory,SaplingCategoryReadDto,SaplingCategoryUpdateDto,SaplingCategoryCreateDto>
 {
-    private readonly IMapper _mapper;
-    private readonly AppDbContext _appDbContext;
-    private readonly IClassRepository<SaplingCategory> _saplingCategoryRepository;
-    public SaplingCategoryController(IMapper mapper,AppDbContext appDbContext, IClassRepository<SaplingCategory> saplingCategoryRepository)
-    {
-        _mapper = mapper;
-        _appDbContext = appDbContext;
-        this._saplingCategoryRepository = saplingCategoryRepository;
-    }
-
+    public SaplingCategoryController(IMapper mapper, IClassRepository<SaplingCategory> saplingCategoryRepository) : base(mapper,saplingCategoryRepository)
+    { }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateSaplingCategoryRequestDto saplingCategoryRequestDto)
+    public virtual async Task<IActionResult> Create(
+        [FromBody] SaplingCategoryCreateDto categoryCreateDtoDto)
     {
-        var sablingCategoryModel =_mapper.Map<SaplingCategory>(saplingCategoryRequestDto);
-        await _saplingCategoryRepository.CreateAsync(sablingCategoryModel);
-        return CreatedAtAction(nameof(GetSaplingById), new { id = sablingCategoryModel.Id },
-            _mapper.Map<SaplingCategoryDto>(sablingCategoryModel));
-    }
-    [HttpGet]
-    public async Task<IActionResult> GetAllSaplings()
-    {
-        var saplings = await _saplingCategoryRepository.GetAllAsync();
-       var saplingDtos = saplings.Select(s=>_mapper.Map<SaplingCategoryDto>(s));
-       return Ok(saplingDtos);
-    }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetSaplingById([FromRoute] int id)
-    {
-        var sapling = await _saplingCategoryRepository.GetByIdAsync(id);
-        if (sapling == null) return NotFound();
-        return Ok(_mapper.Map<SaplingCategoryDto>(sapling));
-    }
-
-    [HttpPut]
-    [Route("{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSaplingRequestDto updateSaplingRequestDto)
-    {
-        var saplingModel = await _saplingCategoryRepository.UpdateAsync(id, updateSaplingRequestDto);
-        if (saplingModel == null) return NotFound();
-        return Ok(_mapper.Map<SaplingCategoryDto>(saplingModel));
-    }
-
-    [HttpDelete]
-    [Route("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-    {
-        var saplingMoodel = await _saplingCategoryRepository.DeleteAsync(id);
-        if (saplingMoodel == null) return NotFound();
-        return NoContent();
+        var entityModel = _mapper.Map<SaplingCategory>(categoryCreateDtoDto);
+        await _genericRepository.CreateAsync(entityModel);
+        return CreatedAtAction(nameof(GetByEntityId), new { id = entityModel.Id },
+            _mapper.Map<SaplingCategoryReadDto>(entityModel));
     }
 }

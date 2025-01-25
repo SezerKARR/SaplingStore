@@ -11,7 +11,7 @@ using SaplingStore.Data;
 namespace SaplingStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250124173150_Initial")]
+    [Migration("20250125064230_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

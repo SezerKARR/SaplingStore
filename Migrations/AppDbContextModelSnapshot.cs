@@ -46,7 +46,7 @@ namespace SaplingStore.Migrations
                     b.ToTable("Saplings");
                 });
 
-            modelBuilder.Entity("SaplingStore.Models.SaplingCategory", b =>
+            modelBuilder.Entity("SaplingStore.Models.SaplingCategoryRepository", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,14 +64,14 @@ namespace SaplingStore.Migrations
 
             modelBuilder.Entity("SaplingStore.Models.Sapling", b =>
                 {
-                    b.HasOne("SaplingStore.Models.SaplingCategory", "Category")
+                    b.HasOne("SaplingStore.Models.SaplingCategoryRepository", "Category")
                         .WithMany("Saplings")
                         .HasForeignKey("SaplingCategoryId");
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("SaplingStore.Models.SaplingCategory", b =>
+            modelBuilder.Entity("SaplingStore.Models.SaplingCategoryRepository", b =>
                 {
                     b.Navigation("Saplings");
                 });
