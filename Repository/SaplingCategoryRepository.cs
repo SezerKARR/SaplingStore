@@ -7,7 +7,7 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
 
-public class SaplingCategoryRepository:ClassRepository<SaplingCategory>
+public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
 {
     public SaplingCategoryRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
     {
@@ -15,20 +15,30 @@ public class SaplingCategoryRepository:ClassRepository<SaplingCategory>
 
     public override async Task<List<SaplingCategory>> GetAllAsync()
     {
-        
-        return await _context.Set<SaplingCategory>().Include(c=>c.Saplings ).ToListAsync();
+        return await _context.Set<SaplingCategory>().Include(c => c.Saplings).ToListAsync();
     }
 
     public override async Task<List<SaplingCategory>> GetAllAsync(QueryObject queryObject)
     {
-        var stocks=  _context.Set<SaplingCategory>().Include
-            (c=>c.Saplings ).AsQueryable();
-        if (!string.IsNullOrEmpty(queryObject.CategoryName))
+        var saplingCategories = _context.Set<SaplingCategory>().Include
+            (c => c.Saplings).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(queryObject.CategoryName))
         {
-            stocks = stocks.Where(c=>c.CategoryName.ToLower().Contains(queryObject.CategoryName.ToLower()));
+            saplingCategories =
+                saplingCategories.Where(c => c.CategoryName.ToLower().Contains(queryObject.CategoryName.ToLower()));
         }
-        
-        return await stocks.ToListAsync();
+
+        if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+        {
+            if (queryObject.SortBy.Equals("CategoryName", StringComparison.OrdinalIgnoreCase))
+            {
+                saplingCategories = queryObject.IsDecSending
+                    ? saplingCategories.OrderByDescending(s => s.CategoryName)
+                    : saplingCategories.OrderBy(s => s.CategoryName);
+            }
+        }
+
+        return await saplingCategories.ToListAsync();
     }
 
     public override async Task<SaplingCategory?> GetByIdAsync(int id)
