@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SaplingStore.Data;
 using SaplingStore.Helpers;
 using SaplingStore.Interfaces;
@@ -8,7 +9,7 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Abstract;
 
-public abstract class ClassRepository<T> :IClassRepository<T> where T : class,IEntity 
+public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where TEntity : class,IEntity 
 {
     protected readonly AppDbContext _context;
     protected readonly IMapper _mapping;
@@ -19,31 +20,40 @@ public abstract class ClassRepository<T> :IClassRepository<T> where T : class,IE
         _context = context;
     }
 
-    public virtual async Task<List<T>> GetAllAsync()
+    public virtual async Task<List<TEntity>> GetAllAsync()
     {
-        return  await _context.Set<T>().ToListAsync();
+        return  await _context.Set<TEntity>().ToListAsync();
+    }
+    protected abstract IQueryable<TEntity> GetQueryAbleObject();
+    
+    public virtual async Task<List<TEntity>> GetAllAsync(QueryObject queryObject)
+    {
+        var query = GetQueryAbleObject();
+        query= QueryableExtensions.ApplyFilter(query,queryObject.SortBy , queryObject.FilterBy);
+        query = QueryableExtensions. ApplySorting(query, queryObject.SortBy, queryObject.IsDecSending);
+        var skipNumber =(queryObject.PageNumber - 1) * queryObject.PageSize;
+        return await query.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
     }
 
-    public virtual async Task<List<T>> GetAllAsync(QueryObject queryObject)
+    public virtual async Task<TEntity?> GetByIdAsync(int id)
     {
-        return  await _context.Set<T>().ToListAsync();
+        return await _context.Set<TEntity>().FindAsync(id);
     }
 
-    public virtual async Task<T?> GetByIdAsync(int id)
+    protected virtual async void AddjustEntity(TEntity entity)
     {
-        return await _context.Set<T>().FindAsync(id);
     }
-
-    public virtual async Task<T> CreateAsync(T entity)
+    public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
-        await _context.Set<T>().AddAsync(entity);
+        AddjustEntity(entity);
+        await _context.Set<TEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public virtual async Task<T?> UpdateAsync<TUpdateDto>(int id, TUpdateDto dto) where TUpdateDto : IUpdateDto
+    public virtual async Task<TEntity?> UpdateAsync<TUpdateDto>(int id, TUpdateDto dto) where TUpdateDto : IUpdateDto
     {
-        var existing = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+        var existing = await _context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
         if (existing == null) return null;
         _mapping.Map(dto, existing);
         await _context.SaveChangesAsync();
@@ -52,17 +62,19 @@ public abstract class ClassRepository<T> :IClassRepository<T> where T : class,IE
 
    
 
-    public virtual async Task<T?> DeleteAsync(int id)
+    public virtual async Task<TEntity?> DeleteAsync(int id)
     {
-        var model = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+        var model = await _context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
         if(model == null) return null;
-        _context.Set<T>().Remove(model);
+        _context.Set<TEntity>().Remove(model);
         await _context.SaveChangesAsync();
         return model;
     }
 
     public virtual async Task<bool> EntityExists(int id)
     {
-        return await _context.Set<T>().AnyAsync(x => x.Id == id);
+        return await _context.Set<TEntity>().AnyAsync(x => x.Id == id);
     }
+
+    
 }

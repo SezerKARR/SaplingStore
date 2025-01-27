@@ -7,5 +7,5 @@ public class SaplingCategoryReadDto:IReadDto
 {
     public int Id { get; set; }
     public string? CategoryName { get; set; }
-    public List<SaplingReadDto>? Saplings { get; set; } 
+    public List<SaplingReadDto>? SaplingReadDtos { get; set; } 
 }

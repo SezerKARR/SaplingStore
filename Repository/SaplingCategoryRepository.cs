@@ -18,28 +18,32 @@ public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
         return await _context.Set<SaplingCategory>().Include(c => c.Saplings).ToListAsync();
     }
 
-    public override async Task<List<SaplingCategory>> GetAllAsync(QueryObject queryObject)
+    protected override IQueryable<SaplingCategory> GetQueryAbleObject()
     {
-        var saplingCategories = _context.Set<SaplingCategory>().Include
-            (c => c.Saplings).AsQueryable();
-        if (!string.IsNullOrWhiteSpace(queryObject.CategoryName))
-        {
-            saplingCategories =
-                saplingCategories.Where(c => c.CategoryName.ToLower().Contains(queryObject.CategoryName.ToLower()));
-        }
-
-        if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
-        {
-            if (queryObject.SortBy.Equals("CategoryName", StringComparison.OrdinalIgnoreCase))
-            {
-                saplingCategories = queryObject.IsDecSending
-                    ? saplingCategories.OrderByDescending(s => s.CategoryName)
-                    : saplingCategories.OrderBy(s => s.CategoryName);
-            }
-        }
-
-        return await saplingCategories.ToListAsync();
+        return _context.Set<SaplingCategory>().Include(c => c.Saplings).AsQueryable();
     }
+    // public override async Task<List<SaplingCategory>> GetAllAsync(QueryObject queryObject)
+    // {
+    //     var saplingCategories = _context.Set<SaplingCategory>().Include
+    //         (c => c.SaplingReadDtos).AsQueryable();
+    //     if (!string.IsNullOrWhiteSpace(queryObject.CategoryName))
+    //     {
+    //         saplingCategories =
+    //             saplingCategories.Where(c => c.CategoryName.ToLower().Contains(queryObject.CategoryName.ToLower()));
+    //     }
+    //
+    //     if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+    //     {
+    //         if (queryObject.SortBy.Equals("CategoryName", StringComparison.OrdinalIgnoreCase))
+    //         {
+    //             saplingCategories = queryObject.IsDecSending
+    //                 ? saplingCategories.OrderByDescending(s => s.CategoryName)
+    //                 : saplingCategories.OrderBy(s => s.CategoryName);
+    //         }
+    //     }
+    //
+    //     return await saplingCategories.ToListAsync();
+    // }
 
     public override async Task<SaplingCategory?> GetByIdAsync(int id)
     {
