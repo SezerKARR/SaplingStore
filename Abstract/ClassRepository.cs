@@ -1,15 +1,13 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SaplingStore.Data;
 using SaplingStore.Helpers;
 using SaplingStore.Interfaces;
-using SaplingStore.Mapper;
 using SaplingStore.Models;
 
 namespace SaplingStore.Abstract;
 
-public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where TEntity : class,IEntity 
+public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where TEntity : class, IEntity
 {
     protected readonly AppDbContext _context;
     protected readonly IMapper _mapping;
@@ -22,16 +20,15 @@ public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where 
 
     public virtual async Task<List<TEntity>> GetAllAsync()
     {
-        return  await _context.Set<TEntity>().ToListAsync();
+        return await _context.Set<TEntity>().ToListAsync();
     }
-    protected abstract IQueryable<TEntity> GetQueryAbleObject();
-    
+
     public virtual async Task<List<TEntity>> GetAllAsync(QueryObject queryObject)
     {
         var query = GetQueryAbleObject();
-        query= QueryableExtensions.ApplyFilter(query,queryObject.SortBy , queryObject.FilterBy);
-        query = QueryableExtensions. ApplySorting(query, queryObject.SortBy, queryObject.IsDecSending);
-        var skipNumber =(queryObject.PageNumber - 1) * queryObject.PageSize;
+        query = QueryableExtensions.ApplyFilter(query, queryObject.SortBy, queryObject.FilterBy);
+        query = QueryableExtensions.ApplySorting(query, queryObject.SortBy, queryObject.IsDecSending);
+        var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
         return await query.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
     }
 
@@ -40,9 +37,6 @@ public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where 
         return await _context.Set<TEntity>().FindAsync(id);
     }
 
-    protected virtual async void AddjustEntity(TEntity entity)
-    {
-    }
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
         AddjustEntity(entity);
@@ -60,12 +54,11 @@ public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where 
         return existing;
     }
 
-   
 
     public virtual async Task<TEntity?> DeleteAsync(int id)
     {
         var model = await _context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
-        if(model == null) return null;
+        if (model == null) return null;
         _context.Set<TEntity>().Remove(model);
         await _context.SaveChangesAsync();
         return model;
@@ -76,5 +69,10 @@ public abstract class ClassRepository<TEntity> :IClassRepository<TEntity> where 
         return await _context.Set<TEntity>().AnyAsync(x => x.Id == id);
     }
 
-    
+    protected abstract IQueryable<TEntity> GetQueryAbleObject();
+
+    protected virtual  void AddjustEntity(TEntity entity)
+    {
+    }
+
 }

@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SaplingStore.DTOs.SaplingCategory;
-using SaplingStore.Models;
 
 namespace SaplingStore.Interfaces;
 

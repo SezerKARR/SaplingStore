@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SaplingStore.Data;
 
@@ -11,9 +12,11 @@ using SaplingStore.Data;
 namespace SaplingStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250203110538_Heights")]
+    partial class Heights
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace SaplingStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "46d597db-15b4-4ba2-8626-1d5de573feef",
+                            Id = "9e86ca9b-7ef4-4b91-a5ed-4155910cc042",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c5d4ca25-a021-439b-9945-ed6db7d30cf8",
+                            Id = "242cedb5-8669-49f3-8ff2-bb1118bfe0d8",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -243,10 +246,6 @@ namespace SaplingStore.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -307,7 +306,7 @@ namespace SaplingStore.Migrations
 
                     b.HasIndex("SaplingId");
 
-                    b.ToTable("SaplingHeights");
+                    b.ToTable("SaplingHeight");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -375,7 +374,7 @@ namespace SaplingStore.Migrations
             modelBuilder.Entity("SaplingStore.Models.SaplingHeight", b =>
                 {
                     b.HasOne("SaplingStore.Models.Sapling", "Sapling")
-                        .WithMany("SaplingHeights")
+                        .WithMany("Heights")
                         .HasForeignKey("SaplingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -385,7 +384,7 @@ namespace SaplingStore.Migrations
 
             modelBuilder.Entity("SaplingStore.Models.Sapling", b =>
                 {
-                    b.Navigation("SaplingHeights");
+                    b.Navigation("Heights");
                 });
 
             modelBuilder.Entity("SaplingStore.Models.SaplingCategory", b =>

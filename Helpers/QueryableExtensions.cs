@@ -23,7 +23,7 @@ public static class QueryableExtensions
         var resultExpression = Expression.Call(
             typeof(Queryable),
             methodName,
-            new Type[] { typeof(T), propertyInfo.PropertyType },
+            new[] { typeof(T), propertyInfo.PropertyType },
             query.Expression,
             Expression.Quote(lambda));
 

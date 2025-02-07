@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SaplingStore.Abstract;
 using SaplingStore.Data;
-using SaplingStore.Helpers;
 using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
@@ -13,11 +12,12 @@ public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
     {
     }
 
-    public override async Task<List<SaplingCategory>> GetAllAsync()
-    {
-        return await _context.Set<SaplingCategory>().Include(c => c.Saplings).ToListAsync();
-    }
+    
 
+    public override async Task<SaplingCategory?> GetByIdAsync(int id)
+    {
+        return await _context.Set<SaplingCategory>().Include(c => c.Saplings).FirstOrDefaultAsync(c => c.Id == id);
+    }
     protected override IQueryable<SaplingCategory> GetQueryAbleObject()
     {
         return _context.Set<SaplingCategory>().Include(c => c.Saplings).AsQueryable();
@@ -45,8 +45,5 @@ public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
     //     return await saplingCategories.ToListAsync();
     // }
 
-    public override async Task<SaplingCategory?> GetByIdAsync(int id)
-    {
-        return await _context.Set<SaplingCategory>().Include(c => c.Saplings).FirstOrDefaultAsync(c => c.Id == id);
-    }
+    
 }
