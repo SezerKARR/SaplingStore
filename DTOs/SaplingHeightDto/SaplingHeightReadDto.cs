@@ -1,11 +1,9 @@
-using SaplingStore.Interfaces;
+using SaplingStore.Abstract;
 
 namespace SaplingStore.DTOs.SaplingHeightDto;
 
-public class SaplingHeightReadDto:IReadDto
+public class SaplingHeightReadDto: ReadDto
 {
-    public int Id { get; set; }
-    public float Height { get; set; }
     public string ImageUrl { get; set; }
     public int SaplingMoney { get; set; }
     public int SaplingId { get; set; }

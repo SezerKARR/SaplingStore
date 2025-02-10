@@ -66,8 +66,9 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
         var errorResult = await AddError(createDto);
         if (errorResult != null)
             return errorResult;
-
+        
         var entity = _mapper.Map<TEntity>(createDto);
+        entity.Slug = SlugHelper.GenerateSlug(entity.Name);
         await _genericRepository.CreateAsync(entity);
         var asd = _mapper.Map<TReadDto>(entity);
         return CreatedAtAction(nameof(GetByEntityId), new { id = entity.Id },

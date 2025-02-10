@@ -26,19 +26,19 @@ public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
     // {
     //     var saplingCategories = _context.Set<SaplingCategory>().Include
     //         (c => c.SaplingReadDtos).AsQueryable();
-    //     if (!string.IsNullOrWhiteSpace(queryObject.CategoryName))
+    //     if (!string.IsNullOrWhiteSpace(queryObject.Name))
     //     {
     //         saplingCategories =
-    //             saplingCategories.Where(c => c.CategoryName.ToLower().Contains(queryObject.CategoryName.ToLower()));
+    //             saplingCategories.Where(c => c.Name.ToLower().Contains(queryObject.Name.ToLower()));
     //     }
     //
     //     if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
     //     {
-    //         if (queryObject.SortBy.Equals("CategoryName", StringComparison.OrdinalIgnoreCase))
+    //         if (queryObject.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
     //         {
     //             saplingCategories = queryObject.IsDecSending
-    //                 ? saplingCategories.OrderByDescending(s => s.CategoryName)
-    //                 : saplingCategories.OrderBy(s => s.CategoryName);
+    //                 ? saplingCategories.OrderByDescending(s => s.Name)
+    //                 : saplingCategories.OrderBy(s => s.Name);
     //         }
     //     }
     //

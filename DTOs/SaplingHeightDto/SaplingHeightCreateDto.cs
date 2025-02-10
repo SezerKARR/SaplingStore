@@ -1,8 +1,8 @@
-using SaplingStore.Interfaces;
+using SaplingStore.Abstract;
 
 namespace SaplingStore.DTOs.SaplingHeightDto;
 
-public class SaplingHeightCreateDto:ICreateDto
+public class SaplingHeightCreateDto:CreateDto
 {
     public float Height { get; set; }
     public string ImageUrl { get; set; }

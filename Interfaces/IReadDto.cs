@@ -2,4 +2,7 @@ namespace SaplingStore.Interfaces;
 
 public interface IReadDto
 {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
 }

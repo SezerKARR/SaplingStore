@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SaplingStore.Data;
 
@@ -11,9 +12,11 @@ using SaplingStore.Data;
 namespace SaplingStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209083713_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace SaplingStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c2ecf85a-d5ce-4fad-b067-7516038cf0c5",
+                            Id = "c8d82e86-c9c8-4aa3-a999-839ab1b0cfa5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "42098a55-8492-44de-ba7c-44fcf7518629",
+                            Id = "12c3a703-fe5e-45bc-9b52-770fb29d0852",
                             Name = "User",
                             NormalizedName = "USER"
                         });

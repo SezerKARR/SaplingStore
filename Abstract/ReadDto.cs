@@ -1,6 +1,8 @@
-namespace SaplingStore.Interfaces;
+using SaplingStore.Interfaces;
 
-public interface IEntity
+namespace SaplingStore.Abstract;
+
+public class ReadDto: IReadDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
