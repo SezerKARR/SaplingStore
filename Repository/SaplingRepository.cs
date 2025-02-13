@@ -13,7 +13,7 @@ public class SaplingRepository : ClassRepository<Sapling>
     {
     }
 
-    protected override async void AddjustEntity(Sapling entity)
+    protected override async Task AddjustEntity(Sapling entity)
     {
         try
         {
@@ -26,10 +26,10 @@ public class SaplingRepository : ClassRepository<Sapling>
         }
     }
 
-    public override async Task<Sapling?> GetByIdAsync(int id)
-    {
-        return await _context.Set<Sapling>().Include(c => c.SaplingCategory).Include(c=>c.SaplingHeights).FirstOrDefaultAsync(c => c.Id == id);
-    }
+    // public override async Task<Sapling?> GetByIdAsync(int id)
+    // {
+    //     return await _context.Set<Sapling>().Include(c => c.SaplingCategory).Include(c=>c.SaplingHeights).FirstOrDefaultAsync(c => c.Id == id);
+    // }
     protected override IQueryable<Sapling> GetQueryAbleObject()
     {
         return _context.Set<Sapling>().Include(c => c.SaplingCategory).Include(c=>c.SaplingHeights).AsQueryable();

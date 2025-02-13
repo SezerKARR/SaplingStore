@@ -59,7 +59,9 @@ builder.Services.AddSwaggerGen(option =>
 });
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        options.UseNpgsql(connectionString),
+    ServiceLifetime.Scoped);
+
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -93,14 +95,13 @@ builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRep
 builder.Services.AddScoped<IClassRepository<SaplingHeight>, SaplingHeightRepository>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -110,7 +111,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseHttpsRedirection();  // Bu satırda, HTTPS yönlendirmesini sadece geliştirmede aktif yapıyoruz
 }
-app.UseCors("AllowAllOrigins");
+app.UseCors("AllowAll");
 
 
 app.UseAuthorization();

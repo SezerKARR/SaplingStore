@@ -8,7 +8,6 @@ public class SaplingCategoryUpdateDto :UpdateDto
 {
     [Required]
     [MinLength(3, ErrorMessage = "Name must be at least 3 characters long")]
-    public string? CategoryName { get; set; }
     public string ImageUrl { get; set; }
-
+    public string Slug { get; set; }
 }

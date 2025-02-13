@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using SaplingStore.Abstract;
 using SaplingStore.Data;
 using SaplingStore.Models;
@@ -14,10 +15,11 @@ public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
 
     
 
-    public override async Task<SaplingCategory?> GetByIdAsync(int id)
-    {
-        return await _context.Set<SaplingCategory>().Include(c => c.Saplings).FirstOrDefaultAsync(c => c.Id == id);
-    }
+    // public override async Task<SaplingCategory?> GetByIdAsync(int id)
+    // {
+    //     return await _context.Set<SaplingCategory>().Include(c => c.Saplings).FirstOrDefaultAsync(c => c.Id == id);
+    // }
+   
     protected override IQueryable<SaplingCategory> GetQueryAbleObject()
     {
         return _context.Set<SaplingCategory>().Include(c => c.Saplings).AsQueryable();

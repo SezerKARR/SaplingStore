@@ -32,14 +32,19 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
         return await query.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(int id)
+    public  async Task<TEntity?> GetByIdAsync(int? id)
     {
-        return await _context.Set<TEntity>().FindAsync(id);
+        return await GetQueryAbleObject().FirstOrDefaultAsync(e=>e.Id==id);
+    }
+
+    public async Task<TEntity?> GetBySlugAsync(string slug)
+    {
+        return await GetQueryAbleObject().FirstOrDefaultAsync(e => e.Slug == slug);
     }
 
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
-        AddjustEntity(entity);
+        await AddjustEntity(entity);
         await _context.Set<TEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
@@ -71,7 +76,7 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
 
     protected abstract IQueryable<TEntity> GetQueryAbleObject();
 
-    protected virtual  void AddjustEntity(TEntity entity)
+    protected virtual async Task AddjustEntity(TEntity entity)
     {
     }
 

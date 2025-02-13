@@ -32,21 +32,31 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
         return Ok(_mapper.Map<TReadDto>(entityModel));
     }
 
+// Slug ile arama yapan metod
+    [HttpGet("{slug}")]
+    public async Task<IActionResult> GetBySlug([FromRoute] string slug)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-    [Authorize(Roles = "Admin")]
+        var entityModel = await _genericRepository.GetBySlugAsync(slug);
+        if (entityModel == null) return NotFound();
+        return Ok(_mapper.Map<TReadDto>(entityModel));
+    }
+
+    // [Authorize(Roles = "Admin")]
     [HttpPut]
     [Route("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id,
         [FromBody] TUpdateDto updateDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-
         var entityModel = await _genericRepository.UpdateAsync(id, updateDto);
+
         if (entityModel == null) return NotFound();
+
         return Ok(_mapper.Map<TReadDto>(entityModel));
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
@@ -69,7 +79,15 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
         
         var entity = _mapper.Map<TEntity>(createDto);
         entity.Slug = SlugHelper.GenerateSlug(entity.Name);
-        await _genericRepository.CreateAsync(entity);
+        try
+        {
+            await _genericRepository.CreateAsync(entity);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, ex+"Internal server error");
+        }
         var asd = _mapper.Map<TReadDto>(entity);
         return CreatedAtAction(nameof(GetByEntityId), new { id = entity.Id },
             asd);

@@ -12,7 +12,7 @@ public class SaplingHeightRepository:ClassRepository<SaplingHeight>
     {
     }
 
-    protected override async void AddjustEntity(SaplingHeight entity)
+    protected override async Task AddjustEntity(SaplingHeight entity)
     {
         
         try

@@ -8,4 +8,5 @@ public class SaplingHeightUpdateDto: UpdateDto
     public int SaplingMoney { get; set; }
     public string ImageUrl { get; set; }
     public int SaplingId { get; set; }
+    public string Slug { get; set; }
 }

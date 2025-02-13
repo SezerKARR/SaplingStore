@@ -12,4 +12,5 @@ public class Sapling : Entity
     public required int SaplingCategoryId { get; set; }
     public SaplingCategory? SaplingCategory { get; set; }
     public string ImageUrl { get; set; }
+    
 }
