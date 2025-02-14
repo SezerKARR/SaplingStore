@@ -58,6 +58,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine(connectionString);
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(connectionString),
     ServiceLifetime.Scoped);
