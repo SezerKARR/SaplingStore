@@ -17,6 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // .env dosyasını yükleyin
 DotEnv.Load();
+var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+                       $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+                       $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+                       $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -57,12 +63,11 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine(connectionString);
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(connectionString),
     ServiceLifetime.Scoped);
 
+// ✅ Identity Yapılandırması
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -71,6 +76,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<AppDbContext>();
+
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var jwtSigningKey = Environment.GetEnvironmentVariable("JWT_SIGNINGKEY") ?? string.Empty;
 
 builder.Services.AddAuthentication(options =>
 {
@@ -82,12 +91,11 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidIssuer = jwtIssuer,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidAudience = jwtAudience,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"] ?? string.Empty))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
     };
 });
 builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
