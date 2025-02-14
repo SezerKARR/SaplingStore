@@ -67,7 +67,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(connectionString),
     ServiceLifetime.Scoped);
 
-// ✅ Identity Yapılandırması
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;

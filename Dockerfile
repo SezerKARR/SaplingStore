@@ -8,8 +8,9 @@ EXPOSE 443
 # Build image: .NET 8.0 SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ./SaplingStore/SaplingStore.csproj ./SaplingStore/   
-RUN dotnet restore "SaplingStore/SaplingStore.csproj"
+COPY ./SaplingStore.csproj ./
+RUN dotnet restore "./SaplingStore.csproj"
+
 COPY . .  
 WORKDIR "/src/SaplingStore"
 RUN dotnet build "SaplingStore.csproj" -c Release -o /app/build
