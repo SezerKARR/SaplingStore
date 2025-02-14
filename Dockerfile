@@ -8,25 +8,26 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Sadece .csproj dosyasını kopyala ve restore et
-COPY ./SaplingStore.csproj ./
+# Projeyi kopyala
+COPY ./SaplingStore.csproj ./   
+
+# Bağımlılıkları yükle
 RUN dotnet restore "./SaplingStore.csproj"
 
 # Tüm kaynakları kopyala
 COPY . .  
-WORKDIR "/src/SaplingStore/SaplingStore"
 
-# Build ve publish adımlarını opsiyonel hale getir
-RUN dotnet build "./SaplingStore.csproj" -c Release -o /app/build
+# Build işlemi
+RUN dotnet build "SaplingStore.csproj" -c Release -o /app/build
 
-# Publish the application
+# Uygulamayı yayınla
 FROM build AS publish
-RUN dotnet publish "./SaplingStore.csproj" -c Release -o /app/publish
+RUN dotnet publish "SaplingStore.csproj" -c Release -o /app/publish
 
-# Final stage: Copy published files to the base image
+# Final stage: Uygulamayı temel imaja kopyala
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish . 
 
-# Set the entry point to run the application
+# Çalıştırma komutu
 ENTRYPOINT ["dotnet", "SaplingStore.dll"]
