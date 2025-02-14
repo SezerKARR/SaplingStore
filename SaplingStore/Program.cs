@@ -69,12 +69,12 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:signingKey"] ?? string.Empty))
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"] ?? string.Empty))
     };
 });
 
@@ -94,7 +94,7 @@ if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
-        options.ListenLocalhost(5001, listenOptions =>
+        options.Listen(IPAddress.Any, 5001, listenOptions =>
         {
             listenOptions.UseHttps();
         });
@@ -110,7 +110,6 @@ else
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

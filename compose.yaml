@@ -2,11 +2,18 @@
   api:
     build: .
     ports:
-      - "8080:8080"
-      - "8081:8081"
+      - "5000:5000"
+      - "5001:5001"
     environment:
+      - DB_HOST=dpg-culhga5svqrc73ce2h9g-a.ohio-postgres.render.com
+      - DB_PORT=5432
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=dpg-culhga5svqrc73ce2h9g-a.ohio-postgres.render.com;Port=5432;Database=saplingstore;Username=saplingstore_user;Password=Yj23MXQZhdaIvrWVcTcAzBAD6EjIWguP;
+      - DB_NAME=saplingstore
+      - DB_USER=saplingstore_user
+      - DB_PASSWORD=Yj23MXQZhdaIvrWVcTcAzBAD6EjIWguP
+      - JWT__Issuer=https://saplingstore-u189.onrender.com,
+      - JWT__Audience=https://saplingstore-u189.onrender.com,
+      - JWT__SigningKey=e15f9f56a74b82e0a370650fabf98d6a583f0aa7f2faba74c8d81b83a39885fa0d3536865599e46bc582ec697048e035c10af7a82859755f028d85c4b13d9486
     depends_on:
       - db
 
