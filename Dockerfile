@@ -5,19 +5,23 @@ EXPOSE 80
 EXPOSE 443
 
 # Build image: .NET 8.0 SDK (development)
-# Build image: .NET 8.0 SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+
+# Sadece .csproj dosyasını kopyala ve restore et
 COPY ./SaplingStore.csproj ./
 RUN dotnet restore "./SaplingStore.csproj"
 
+# Tüm kaynakları kopyala
 COPY . .  
-WORKDIR "/src/SaplingStore"
-RUN dotnet build "SaplingStore.csproj" -c Release -o /app/build
+WORKDIR "/src/SaplingStore/SaplingStore"
+
+# Build ve publish adımlarını opsiyonel hale getir
+RUN dotnet build "./SaplingStore.csproj" -c Release -o /app/build
 
 # Publish the application
 FROM build AS publish
-RUN dotnet publish "SaplingStore.csproj" -c Release -o /app/publish
+RUN dotnet publish "./SaplingStore.csproj" -c Release -o /app/publish
 
 # Final stage: Copy published files to the base image
 FROM base AS final
