@@ -16,21 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenLocalhost(5097); // HTTP portu
-    options.ListenLocalhost(5000, listenOptions =>
-    {
-        listenOptions.UseHttps();  // HTTPS portu
-    });
-});
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 5000;  // HTTPS portu
-});
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -58,6 +44,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(connectionString),
@@ -90,6 +77,7 @@ builder.Services.AddAuthentication(options =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:signingKey"] ?? string.Empty))
     };
 });
+
 builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRepository>();
@@ -101,14 +89,24 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.Listen(IPAddress.Any, 5001, listenOptions =>
-    {
-        listenOptions.UseHttps();  // Ensure HTTPS is enabled
-    });
-});
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenLocalhost(5001, listenOptions =>
+        {
+            listenOptions.UseHttps();
+        });
+    });
+}
+else
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.Listen(IPAddress.Any, 5000);  // HTTP only in production
+    });
+}
 
 var app = builder.Build();
 
@@ -117,10 +115,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseHttpsRedirection();  // Bu satırda, HTTPS yönlendirmesini sadece geliştirmede aktif yapıyoruz
 }
-app.UseCors("AllowAll");
 
+app.UseHttpsRedirection();  // Apply it globally
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 app.MapControllers();
