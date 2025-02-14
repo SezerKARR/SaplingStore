@@ -89,16 +89,19 @@ builder.Services.AddAuthentication(options =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"] ?? string.Empty))
     };
 });
-
+builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRepository>();
+builder.Services.AddScoped<IClassRepository<SaplingHeight>, SaplingHeightRepository>();
 
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
         options.Listen(IPAddress.Any, 5000);  // HTTP üzerinden port 5000'de dinle
-        options.Listen(IPAddress.Any, 443, listenOptions =>
+        options.Listen(IPAddress.Any, 5001, listenOptions =>
         {
-            listenOptions.UseHttps();  // HTTPS üzerinden port 443
+            listenOptions.UseHttps();  // HTTPS üzerinden port 5001 (geliştirme ortamında)
         });
     });
 }
@@ -106,12 +109,11 @@ else
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
-        options.Listen(IPAddress.Any, 443, listenOptions =>
-        {
-            listenOptions.UseHttps();  // Üretim ortamı için HTTPS portu 443
-        });
+        options.Listen(IPAddress.Any, 80);  // Render'da HTTP portu
+        // Port 443 ve HTTPS yapılandırması Render tarafından otomatik olarak sağlanır
     });
 }
+
 
 var app = builder.Build();
 app.UseRouting();
