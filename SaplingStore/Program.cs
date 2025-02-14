@@ -17,6 +17,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // .env dosyasını yükleyin
 DotEnv.Load();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Tüm kaynaklardan gelen istekleri kabul et
+            .AllowAnyMethod()  // Herhangi bir HTTP metodunu kabul et
+            .AllowAnyHeader();  // Herhangi bir başlık kabul et
+    });
+});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -81,21 +90,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-});
+
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
         options.Listen(IPAddress.Any, 5000);  // HTTP üzerinden port 5000'de dinle
-        options.Listen(IPAddress.Any, 5001, listenOptions =>
+        options.Listen(IPAddress.Any, 443, listenOptions =>
         {
-            listenOptions.UseHttps();  // HTTPS üzerinde port 5001
+            listenOptions.UseHttps();  // HTTPS üzerinden port 443
         });
     });
 }
@@ -103,18 +106,19 @@ else
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
-        options.Listen(IPAddress.Any, 5000);  // Prod ortamında HTTP üzerinden port 5000
+        options.Listen(IPAddress.Any, 443, listenOptions =>
+        {
+            listenOptions.UseHttps();  // Üretim ortamı için HTTPS portu 443
+        });
     });
 }
+
 var app = builder.Build();
 app.UseRouting();
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/asd", () => "Hello World!");
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();  // Apply it globally
 app.UseCors("AllowAll");
