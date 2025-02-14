@@ -1,0 +1,27 @@
+﻿services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=dpg-culhga5svqrc73ce2h9g-a.ohio-postgres.render.com;Port=5432;Database=saplingstore;Username=saplingstore_user;Password=Yj23MXQZhdaIvrWVcTcAzBAD6EjIWguP;
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: saplingstore
+      POSTGRES_USER: saplingstore_user
+      POSTGRES_PASSWORD: Yj23MXQZhdaIvrWVcTcAzBAD6EjIWguP
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
