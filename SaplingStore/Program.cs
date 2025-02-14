@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -99,6 +100,13 @@ builder.Services.AddCors(options =>
         policy => policy.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
+});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 5001, listenOptions =>
+    {
+        listenOptions.UseHttps();  // Ensure HTTPS is enabled
+    });
 });
 
 
