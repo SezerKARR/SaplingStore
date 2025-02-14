@@ -1,23 +1,23 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+﻿# Base image: .NET 8.0 SDK
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
+EXPOSE 443
 
+# Build image: .NET 8.0 SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SaplingStore/SaplingStore.csproj", "SaplingStore/"]
-RUN dotnet restore "SaplingStore/SaplingStore.csproj"
+COPY ["SaplingStore.Api/SaplingStore.Api.csproj", "SaplingStore.Api/"]
+RUN dotnet restore "SaplingStore.Api/SaplingStore.Api.csproj"
 COPY . .
-WORKDIR "/src/SaplingStore"
-RUN dotnet build "SaplingStore.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/SaplingStore.Api"
+RUN dotnet build "SaplingStore.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "SaplingStore.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "SaplingStore.Api.csproj" -c Release -o /app/publish
 
+# Final stage: Copy files to the base image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SaplingStore.dll"]
+ENTRYPOINT ["dotnet", "SaplingStore.Api.dll"]

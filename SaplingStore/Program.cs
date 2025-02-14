@@ -1,5 +1,5 @@
 using System.Net;
-using System.Text;
+using dotenv.net; // Dotenv paketini ekleyin
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +11,12 @@ using SaplingStore.Mapper;
 using SaplingStore.Models;
 using SaplingStore.Repository;
 using SaplingStore.Service;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// .env dosyasını yükleyin
+DotEnv.Load();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -78,10 +81,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRepository>();
-builder.Services.AddScoped<IClassRepository<SaplingHeight>, SaplingHeightRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -89,14 +88,14 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
-
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
+        options.Listen(IPAddress.Any, 5000);  // HTTP üzerinden port 5000'de dinle
         options.Listen(IPAddress.Any, 5001, listenOptions =>
         {
-            listenOptions.UseHttps();
+            listenOptions.UseHttps();  // HTTPS üzerinde port 5001
         });
     });
 }
@@ -104,12 +103,13 @@ else
 {
     builder.WebHost.ConfigureKestrel(options =>
     {
-        options.Listen(IPAddress.Any, 5000);  // HTTP only in production
+        options.Listen(IPAddress.Any, 5000);  // Prod ortamında HTTP üzerinden port 5000
     });
 }
-
 var app = builder.Build();
-
+app.UseRouting();
+app.MapGet("/", () => "Hello World!");
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
