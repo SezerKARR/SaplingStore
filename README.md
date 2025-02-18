@@ -4,7 +4,7 @@ Tabii, işte **SaplingStore** uygulamanız için uygun bir **README.md** dosyas�
 
 # **SaplingStore**
 
-SaplingStore, **.NET 6/7** ile geliştirilmiş, RESTful API'ler ve mikro hizmetler (microservices) mimarisi kullanan bir e-ticaret uygulamasıdır. Bu uygulama, ürünleri (örneğin, fidanlar) yönetmek ve kullanıcıların en iyi alışveriş deneyimini sağlamayı hedeflemektedir.
+SaplingStore, **.NET 8.0** ile geliştirilmiş, RESTful API'ler ve mikro hizmetler (microservices) mimarisi kullanan bir e-ticaret uygulamasıdır. Bu uygulama, ürünleri (örneğin, fidanlar) yönetmek ve kullanıcıların en iyi alışveriş deneyimini sağlamayı hedeflemektedir.
 
 ## **Özellikler**
 - **CRUD (Create, Read, Update, Delete)** işlemleri
@@ -16,7 +16,7 @@ SaplingStore, **.NET 6/7** ile geliştirilmiş, RESTful API'ler ve mikro hizmetl
 - **JWT Authentication** ile güvenlik
 
 ## **Kullanılan Teknolojiler**
-- **.NET 6/7** - Uygulamanın ana geliştirme platformu
+- **.NET 8.0** - Uygulamanın ana geliştirme platformu
 - **ASP.NET Core** - API geliştirme
 - **Entity Framework Core** - Veritabanı yönetimi
 - **AutoMapper** - Nesne dönüştürme işlemleri
@@ -28,7 +28,7 @@ SaplingStore, **.NET 6/7** ile geliştirilmiş, RESTful API'ler ve mikro hizmetl
 
 ## **Kurulum**
 ### Gereksinimler:
-- **.NET 6/7 SDK**
+- **.NET 8.0 SDK**
 - **Docker** (opsiyonel, konteyner ile çalışmak için)
 
 ### 1. Projeyi Klonlayın:
