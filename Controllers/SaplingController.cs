@@ -16,8 +16,9 @@ public class SaplingController(
     : BaseController<IClassRepository<Sapling>, Sapling, SaplingReadDto, SaplingUpdateDto, SaplingCreateDto>(mapper,
         saplingRepository)
 {
-    protected override async Task<IActionResult?> AddError(SaplingCreateDto createDto)
-    {
+    protected override async Task<IActionResult?> AddError(SaplingCreateDto createDto) {
+        var sc = await saplingCategoryRepository.EntityExists(createDto.SaplingCategoryId);
+        Console.WriteLine(saplingCategoryRepository.EntityExists(createDto.Id));
         if (!await saplingCategoryRepository.EntityExists(createDto.SaplingCategoryId))
             return BadRequest("saplingCategory does not exist");
         return await base.AddError(createDto);

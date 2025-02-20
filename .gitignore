@@ -98,6 +98,13 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+.env
+config.json
+secrets.json
+*.pem
+*.pfx
+*.crt
+
 # Chutzpah Test files
 _Chutzpah*
 

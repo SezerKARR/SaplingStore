@@ -2,16 +2,11 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SaplingStore.Abstract;
 using SaplingStore.Data;
-using SaplingStore.Migrations;
 using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
 
-public class SaplingRepository : ClassRepository<Sapling>
-{
-    public SaplingRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
-    {
-    }
+public class SaplingRepository(AppDbContext context, IMapper mapping) : ClassRepository<Sapling>(context, mapping) {
 
     protected override async Task AddjustEntity(Sapling entity)
     {

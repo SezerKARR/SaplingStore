@@ -17,12 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // .env dosyasını yükleyin
 DotEnv.Load();
-var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_HOST")};" +
                        $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
                        $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+                       $"User={Environment.GetEnvironmentVariable("DB_USER")};" +
                        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
 
+// CORS yapılandırması
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -32,6 +33,8 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();  // Herhangi bir başlık kabul et
     });
 });
+
+// AutoMapper ve diğer servisler
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -63,10 +66,12 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+// MySQL Bağlantısı
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(connectionString),
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)),
     ServiceLifetime.Scoped);
 
+// Identity yapılandırması
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -80,6 +85,7 @@ var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 var jwtSigningKey = Environment.GetEnvironmentVariable("JWT_SIGNINGKEY") ?? string.Empty;
 
+// JWT doğrulama
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -97,11 +103,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
     };
 });
+
+// Repository ve Servisler
 builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRepository>();
 builder.Services.AddScoped<IClassRepository<SaplingHeight>, SaplingHeightRepository>();
 
+// Kestrel yapılandırması
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
@@ -119,12 +128,11 @@ else
     });
 }
 
-
-
 var app = builder.Build();
 app.UseRouting();
 app.MapGet("/asd", () => "Hello World!");
-// Configure the HTTP request pipeline.
+
+// HTTP isteklerini yönlendirme ve Swagger yapılandırması
 app.UseSwagger();
 app.UseSwaggerUI();
 
