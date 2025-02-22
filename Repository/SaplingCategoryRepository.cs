@@ -7,20 +7,23 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
 
+using DTOs.SaplingCategory;
+using DTOs.SaplingDTO;
+
 public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
 {
     public SaplingCategoryRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
     {
     }
-
+    public override Type GetCreateDto() => typeof(SaplingCategoryCreateDto);
     
 
     // public override async Task<SaplingCategory?> GetByIdAsync(int id)
     // {
     //     return await _context.Set<SaplingCategory>().Include(c => c.Saplings).FirstOrDefaultAsync(c => c.Id == id);
     // }
-   
-    protected override IQueryable<SaplingCategory> GetQueryAbleObject()
+
+    public override IQueryable<SaplingCategory> GetQueryAbleObject()
     {
         return _context.Set<SaplingCategory>().Include(c => c.Saplings).AsQueryable();
     }

@@ -7,8 +7,10 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Controllers;
 
+using Repository;
+
 [Route("api/[controller]")]
 [ApiController]
-public class SaplingCategoryController(IMapper mapper, IClassRepository<SaplingCategory> saplingCategoryRepository)
-    : BaseController<IClassRepository<SaplingCategory>, SaplingCategory, SaplingCategoryReadDto,
+public class SaplingCategoryController(IMapper mapper, SaplingCategoryRepository saplingCategoryRepository)
+    : BaseController<SaplingCategoryRepository, SaplingCategory, SaplingCategoryReadDto,
         SaplingCategoryUpdateDto, SaplingCategoryCreateDto>(mapper, saplingCategoryRepository);

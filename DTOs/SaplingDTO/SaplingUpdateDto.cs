@@ -6,11 +6,11 @@ using SaplingStore.Models;
 
 namespace SaplingStore.DTOs.SaplingDTO;
 
-public class SaplingUpdateDto : IUpdateDto
+using Abstract;
+
+public class SaplingUpdateDto : UpdateDto
 {
-    [Required]
-    [MinLength(2, ErrorMessage = "Min length is 2")]
-    public string? Name { get; set; }
+    
     public List<SaplingHeightUpdateDto> SaplingHeightUpdateDtos { get; set; } = new List<SaplingHeightUpdateDto>();
     public string? Description  { get; set; }
     public int? SaplingCategoryId { get; set; }

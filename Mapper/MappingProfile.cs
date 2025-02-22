@@ -17,6 +17,8 @@ public class MappingProfile : Profile
         CreateMap<Sapling, SaplingReadDto>().ForMember(dest => dest.SaplingCategoryBasicReadDto,
             opt => opt.MapFrom(src => src.SaplingCategory)).ForMember(dest=>dest.SaplingHeightReadDtos,opt=> opt.MapFrom(src=>src.SaplingHeights)); // Sapling'den SaplingReadDto'ya dönüşüm
 
+        CreateMap<Sapling, SaplingCreateDto>();
+
         // SAPLING CATEGORY
         CreateMap<SaplingCategoryReadDto, SaplingCategory>()
             .ForMember(dest => dest.Saplings, opt => opt.MapFrom(src => src.SaplingReadDtos));
@@ -26,13 +28,14 @@ public class MappingProfile : Profile
         CreateMap<SaplingCategoryBasicReadDto, SaplingCategory>();
         CreateMap<SaplingCategoryCreateDto, SaplingCategory>(); // SaplingCategoryCreateDto'dan SaplingCategoryRepository'ye dönüşüm
         CreateMap<SaplingCategoryUpdateDto, SaplingCategory>();
+        CreateMap<SaplingCategory, SaplingCategoryCreateDto>();
         
         
         CreateMap<SaplingHeight,SaplingHeightReadDto>().ForMember(dest => dest.SaplingName,opt => opt.MapFrom(src => src.Sapling!.Name));
         CreateMap<SaplingHeightReadDto, SaplingHeight>();
         CreateMap<SaplingHeightUpdateDto, SaplingHeight>();
         CreateMap<SaplingHeightCreateDto, SaplingHeight>();
-
+        CreateMap<SaplingHeight, SaplingHeightCreateDto>();
         // Create the mapping
     }
 }

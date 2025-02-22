@@ -2,8 +2,11 @@ using SaplingStore.Helpers;
 
 namespace SaplingStore.Interfaces;
 
-public interface IClassRepository<T> where T : IEntity
+using Abstract;
+
+public interface IClassRepository<T> where T : class, IEntity
 {
+     Type GetCreateDto();
     Task<List<T>> GetAllAsync();
     Task<T?> GetBySlugAsync(string slug);
     Task<List<T>> GetAllAsync(QueryObject queryObject);
@@ -12,4 +15,5 @@ public interface IClassRepository<T> where T : IEntity
     Task<T?> UpdateAsync<T1>(int id, T1 entity) where T1 : IUpdateDto;
     Task<T?> DeleteAsync(int id);
     Task<bool> EntityExists(int id);
+     IQueryable<T> GetQueryAbleObject();
 }

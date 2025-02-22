@@ -5,37 +5,30 @@ using SaplingStore.Interfaces;
 
 namespace SaplingStore.Abstract;
 
-public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDto> : Controller, IController<TUpdateDto>
-    where T : class, IClassRepository<TEntity>
-    where TEntity : class, IEntity
-    where TReadDto : class, IReadDto
-    where TUpdateDto : class, IUpdateDto
-    where TCreateDto : class, ICreateDto {
-    protected readonly T _genericRepository;
-    protected readonly IMapper _mapper;
+using Microsoft.EntityFrameworkCore;
 
-    protected BaseController(IMapper mapper, T genericRepository) {
-        _genericRepository = genericRepository;
-        _mapper = mapper;
-    }
+public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDto>(IMapper mapper, T genericRepository) : Controller
+    where T : class, IClassRepository<TEntity>
+    where TEntity : Entity
+    where TReadDto : ReadDto
+    where TUpdateDto : UpdateDto
+    where TCreateDto : CreateDto {
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetByEntityId([FromRoute] int id) {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var entityModel = await _genericRepository.GetByIdAsync(id);
+        var entityModel = await genericRepository.GetByIdAsync(id);
         if (entityModel == null) return NotFound();
-        return Ok(_mapper.Map<TReadDto>(entityModel));
+        return Ok(mapper.Map<TReadDto>(entityModel));
     }
 
 // Slug ile arama yapan metod
     [HttpGet("{slug}")]
     public async Task<IActionResult> GetBySlug([FromRoute] string slug) {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var entityModel = await _genericRepository.GetBySlugAsync(slug);
+        var entityModel = await genericRepository.GetBySlugAsync(slug);
         if (entityModel == null) return NotFound();
-        return Ok(_mapper.Map<TReadDto>(entityModel));
+        return Ok(mapper.Map<TReadDto>(entityModel));
     }
 
     // [Authorize(Roles = "Admin")]
@@ -44,11 +37,12 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
     public async Task<IActionResult> Update([FromRoute] int id,
         [FromBody] TUpdateDto updateDto) {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var entityModel = await _genericRepository.UpdateAsync(id, updateDto);
+        var entityModel = await genericRepository.UpdateAsync(id, updateDto);
 
-        if (entityModel == null) return NotFound();
+        if (entityModel == null) return BadRequest($"{typeof(TEntity)} does not exist");
 
-        return Ok(_mapper.Map<TReadDto>(entityModel));
+
+        return Ok(mapper.Map<TReadDto>(entityModel));
     }
 
     [HttpDelete]
@@ -57,7 +51,7 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
 
-        var entityModel = await _genericRepository.DeleteAsync(id);
+        var entityModel = await genericRepository.DeleteAsync(id);
         if (entityModel == null) return NotFound();
         return Ok(entityModel);
     }
@@ -69,15 +63,15 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
         if (errorResult != null)
             return errorResult;
 
-        var entity = _mapper.Map<TEntity>(createDto);
+        var entity = mapper.Map<TEntity>(createDto);
         entity.Slug = SlugHelper.GenerateSlug(entity.Name);
-        try { await _genericRepository.CreateAsync(entity); }
+        try { await genericRepository.CreateAsync(entity); }
         catch (Exception ex)
         {
             // Log the exception
             return StatusCode(500, ex + "Internal server error");
         }
-        var asd = _mapper.Map<TReadDto>(entity);
+        var asd = mapper.Map<TReadDto>(entity);
         return CreatedAtAction(nameof(GetByEntityId), new { id = entity.Id },
         asd);
     }
@@ -100,9 +94,9 @@ public abstract class BaseController<T, TEntity, TReadDto, TUpdateDto, TCreateDt
     [HttpGet]
     public async Task<IActionResult> GetAllGenericEntity([FromQuery] QueryObject queryObject) {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        List<TEntity> entities = await _genericRepository.GetAllAsync(queryObject);
-        List<TReadDto> readDtos = entities.Select(entity => _mapper.Map<TReadDto>(entity)).ToList();
+      
+        List<TEntity> entities = await genericRepository.GetAllAsync(queryObject);
+        List<TReadDto> readDtos = entities.Select(entity => mapper.Map<TReadDto>(entity)).ToList();
         return Ok(readDtos);
     }
 }

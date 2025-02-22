@@ -7,18 +7,18 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Controllers;
 
+using Repository;
+
 [Route("api/[controller]")]
 [ApiController]
 public class SaplingController(
     IMapper mapper,
-    IClassRepository<Sapling> saplingRepository,
-    IClassRepository<SaplingCategory> saplingCategoryRepository)
-    : BaseController<IClassRepository<Sapling>, Sapling, SaplingReadDto, SaplingUpdateDto, SaplingCreateDto>(mapper,
+    SaplingRepository saplingRepository,
+    SaplingCategoryRepository saplingCategoryRepository)
+    : BaseController<SaplingRepository, Sapling, SaplingReadDto, SaplingUpdateDto, SaplingCreateDto>(mapper,
         saplingRepository)
 {
     protected override async Task<IActionResult?> AddError(SaplingCreateDto createDto) {
-        var sc = await saplingCategoryRepository.EntityExists(createDto.SaplingCategoryId);
-        Console.WriteLine(saplingCategoryRepository.EntityExists(createDto.Id));
         if (!await saplingCategoryRepository.EntityExists(createDto.SaplingCategoryId))
             return BadRequest("saplingCategory does not exist");
         return await base.AddError(createDto);

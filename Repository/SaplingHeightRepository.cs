@@ -6,6 +6,8 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
 
+using DTOs.SaplingHeightDto;
+
 public class SaplingHeightRepository:ClassRepository<SaplingHeight>
 {
     public SaplingHeightRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
@@ -26,8 +28,8 @@ public class SaplingHeightRepository:ClassRepository<SaplingHeight>
         }
     }
 
-    
-    protected override IQueryable<SaplingHeight> GetQueryAbleObject()
+    public override Type GetCreateDto() => typeof(SaplingHeightCreateDto);
+    public override IQueryable<SaplingHeight> GetQueryAbleObject()
     {
         return _context.Set<SaplingHeight>().Include(c => c.Sapling).AsQueryable();
     }

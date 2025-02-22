@@ -2,7 +2,6 @@ using System.Net;
 using dotenv.net; // Dotenv paketini ekleyin
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SaplingStore.Data;
@@ -12,18 +11,19 @@ using SaplingStore.Models;
 using SaplingStore.Repository;
 using SaplingStore.Service;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using SaplingStore.DTOs.SaplingDTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // .env dosyasını yükleyin
 DotEnv.Load();
-var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_HOST")};" +
+var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
                        $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
                        $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-                       $"User={Environment.GetEnvironmentVariable("DB_USER")};" +
+                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
                        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
 
-// CORS yapılandırması
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -33,9 +33,13 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();  // Herhangi bir başlık kabul et
     });
 });
-
-// AutoMapper ve diğer servisler
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper((config) =>
+{
+    config.AllowNullCollections = true;
+    config.AllowNullDestinationValues = true;
+}, typeof(MappingProfile));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -66,12 +70,12 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-// MySQL Bağlantısı
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)),
-    ServiceLifetime.Scoped);
+ServiceLifetime.Scoped);
 
-// Identity yapılandırması
+
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -85,7 +89,6 @@ var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 var jwtSigningKey = Environment.GetEnvironmentVariable("JWT_SIGNINGKEY") ?? string.Empty;
 
-// JWT doğrulama
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -103,14 +106,17 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
     };
 });
-
-// Repository ve Servisler
-builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IClassRepository<Sapling>, SaplingRepository>();
 builder.Services.AddScoped<IClassRepository<SaplingCategory>, SaplingCategoryRepository>();
 builder.Services.AddScoped<IClassRepository<SaplingHeight>, SaplingHeightRepository>();
+builder.Services.AddScoped<IClassRepository<Image>, ImageRepository>();
+builder.Services.AddScoped<SaplingRepository>();
+builder.Services.AddScoped<SaplingCategoryRepository>();
+builder.Services.AddScoped<SaplingHeightRepository>();
+builder.Services.AddScoped<ImageRepository>();
 
-// Kestrel yapılandırması
+builder.Services.AddScoped<SeedDataGeneric>();
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
@@ -128,11 +134,18 @@ else
     });
 }
 
+
+
 var app = builder.Build();
+
+// SeedData.ExportCurrentData(context);
+//     
+// // Database'i sıfırla ve migration'ları uygula
+// // Sonra yedeklenen verileri geri yükle
+// SeedData.ImportSeedData(context);
 app.UseRouting();
 app.MapGet("/asd", () => "Hello World!");
-
-// HTTP isteklerini yönlendirme ve Swagger yapılandırması
+// Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
 

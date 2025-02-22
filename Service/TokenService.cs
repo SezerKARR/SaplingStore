@@ -8,6 +8,8 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Service;
 
+using Microsoft.Extensions.Configuration;
+
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;

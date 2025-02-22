@@ -6,7 +6,10 @@ using SaplingStore.Models;
 
 namespace SaplingStore.Repository;
 
+using DTOs.SaplingDTO;
+
 public class SaplingRepository(AppDbContext context, IMapper mapping) : ClassRepository<Sapling>(context, mapping) {
+    
 
     protected override async Task AddjustEntity(Sapling entity)
     {
@@ -20,12 +23,12 @@ public class SaplingRepository(AppDbContext context, IMapper mapping) : ClassRep
             throw; // TODO handle exception
         }
     }
-
+    public override Type GetCreateDto() => typeof(SaplingCreateDto);
     // public override async Task<Sapling?> GetByIdAsync(int id)
     // {
     //     return await _context.Set<Sapling>().Include(c => c.SaplingCategory).Include(c=>c.SaplingHeights).FirstOrDefaultAsync(c => c.Id == id);
     // }
-    protected override IQueryable<Sapling> GetQueryAbleObject()
+    public override IQueryable<Sapling> GetQueryAbleObject()
     {
         return _context.Set<Sapling>().Include(c => c.SaplingCategory).Include(c=>c.SaplingHeights).AsQueryable();
     }

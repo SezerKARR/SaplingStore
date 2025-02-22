@@ -13,7 +13,7 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
     protected readonly IMapper _mapping;
     private readonly DbSet<TEntity> _dbSet;
 
-
+    public abstract Type GetCreateDto();
     protected ClassRepository(AppDbContext context, IMapper mapping)
     {
         _mapping = mapping;
@@ -23,7 +23,7 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
 
     public virtual async Task<List<TEntity>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await GetQueryAbleObject().ToListAsync();
     }
 
     public virtual async Task<List<TEntity>> GetAllAsync(QueryObject queryObject)
@@ -81,11 +81,11 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
         Console.WriteLine((a.Count,a));
         return await _dbSet.AnyAsync(x => x.Id == id);
     }
-
-    protected abstract IQueryable<TEntity> GetQueryAbleObject();
+    public abstract IQueryable<TEntity> GetQueryAbleObject();
 
     protected virtual async Task AddjustEntity(TEntity entity)
     {
     }
+    
 
 }
