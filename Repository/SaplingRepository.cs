@@ -8,7 +8,7 @@ namespace SaplingStore.Repository;
 
 using DTOs.SaplingDTO;
 
-public class SaplingRepository(AppDbContext context, IMapper mapping) : ClassRepository<Sapling>(context, mapping) {
+public class SaplingRepository(AppDbContext context, IMapper mapper) : ClassRepository<Sapling>(context, mapper) {
     
 
     protected override async Task AddjustEntity(Sapling entity)

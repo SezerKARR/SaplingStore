@@ -1,8 +1,34 @@
 {
-  "$id": "1",
-  "SaplingHeight": [
+  "sapling": [
     {
-      "$id": "2",
+      "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLKHm-ithK-lbgcFfyq5Lph9HVjjpRDc_R7g\u0026s",
+      "SaplingCategoryId": 1,
+      "Id": 1,
+      "Name": "Kara servi"
+    },
+    {
+      "ImageUrl": "https://ideacdn.net/idea/bt/18/myassets/products/141/mavi-servi_min.jpg?revision=1732463266",
+      "SaplingCategoryId": 1,
+      "Id": 2,
+      "Name": "Mavi servi"
+    },
+    {
+      "Description": "",
+      "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSHYhFGPDp80bNtRDn5WGNYoWACbgv4K5FVQ\u0026s",
+      "SaplingCategoryId": 1,
+      "Id": 3,
+      "Name": "Frans\u0131z leylandi"
+    },
+    {
+      "Description": "string",
+      "ImageUrl": "string",
+      "SaplingCategoryId": 1,
+      "Id": 4,
+      "Name": "string"
+    }
+  ],
+  "saplingHeight": [
+    {
       "Height": 0,
       "ImageUrl": "https://i0.shbdn.com/photos/23/62/80/x5_1227236280b41.jpg",
       "SaplingId": 2,
@@ -11,7 +37,6 @@
       "Name": ""
     },
     {
-      "$id": "3",
       "Height": 0,
       "ImageUrl": "https://i0.shbdn.com/photos/23/62/80/x5_1227236280b41.jpg",
       "SaplingId": 2,
@@ -20,13 +45,29 @@
       "Name": ""
     },
     {
-      "$id": "4",
       "Height": 0,
       "ImageUrl": "https://i0.shbdn.com/photos/22/23/44/x5_122722234423n.jpg",
       "SaplingId": 2,
       "SaplingMoney": 0,
       "Id": 3,
       "Name": ""
+    }
+  ],
+  "saplingCategory": [
+    {
+      "ImageUrl": "https://ideacdn.net/shop/hr/14/myassets/products/125/tuplu-cit-mazi-fidani-984-png.png?revision=1697143329",
+      "Id": 1,
+      "Name": "\u00C7it Fidanlar\u0131"
+    },
+    {
+      "ImageUrl": "\thttps://ideacdn.net/idea/gs/40/myassets/products/563/ruz1012-12.jpg?revision=1697143329",
+      "Id": 2,
+      "Name": "\u00C7icek Fidanlar\u0131"
+    },
+    {
+      "ImageUrl": "https://fidansepetim.com/uploads/p/p/Sert-Cekirdekli-Meyve-Fidanlari-Paketi-4-Adet-Fidan_1.png?v=1710262852",
+      "Id": 3,
+      "Name": "Meyve Fidanlar\u0131"
     }
   ]
 }

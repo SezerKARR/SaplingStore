@@ -10,17 +10,27 @@ namespace SaplingStore.Abstract;
 public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where TEntity : Entity
 {
     protected readonly AppDbContext _context;
-    protected readonly IMapper _mapping;
+    protected readonly IMapper _mapper;
     private readonly DbSet<TEntity> _dbSet;
 
     public abstract Type GetCreateDto();
-    protected ClassRepository(AppDbContext context, IMapper mapping)
+    protected ClassRepository(AppDbContext context, IMapper mapper)
     {
-        _mapping = mapping;
+        _mapper = mapper;
         _context = context;
         _dbSet=_context.Set<TEntity>();
     }
-
+    // public virtual async Task<object> GetAllCreateAsync( ) {
+    //     var all=await GetQueryAbleObject().ToListAsync();
+    //     var mappedEntities=new List<object>();
+    //     foreach (var entity in all)
+    //     {
+    //         mappedEntities.Add(_mapper.Map(entity, typeof(TEntity), entity.DtoTypes["CreateDto"]) ); ;
+    //     }
+    //     return mappedEntities;
+    //     // Entity'nin createDto tipini al ve mapperı kullan
+    // }
+    
     public virtual async Task<List<TEntity>> GetAllAsync()
     {
         return await GetQueryAbleObject().ToListAsync();
@@ -60,7 +70,7 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
     {
         var existing = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
         if (existing == null) return null;
-        _mapping.Map(dto, existing);
+        _mapper.Map(dto, existing);
         await _context.SaveChangesAsync();
         return existing;
     }

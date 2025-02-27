@@ -6,6 +6,7 @@ using Abstract;
 
 public interface IClassRepository<T> where T : class, IEntity
 {
+    
      Type GetCreateDto();
     Task<List<T>> GetAllAsync();
     Task<T?> GetBySlugAsync(string slug);

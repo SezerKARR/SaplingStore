@@ -12,7 +12,7 @@ using DTOs.SaplingDTO;
 
 public class SaplingCategoryRepository : ClassRepository<SaplingCategory>
 {
-    public SaplingCategoryRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
+    public SaplingCategoryRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
     {
     }
     public override Type GetCreateDto() => typeof(SaplingCategoryCreateDto);

@@ -10,7 +10,7 @@ using DTOs.SaplingHeightDto;
 
 public class SaplingHeightRepository:ClassRepository<SaplingHeight>
 {
-    public SaplingHeightRepository(AppDbContext context, IMapper mapping) : base(context, mapping)
+    public SaplingHeightRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
     {
     }
 
