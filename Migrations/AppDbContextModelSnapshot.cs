@@ -50,13 +50,13 @@ namespace SaplingStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6c08b8c1-2321-4f9b-a25e-62c3ad91c5b6",
+                            Id = "39ae86cb-35e1-4e84-916e-e0fc74c64fa5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "36f591ae-3c11-4db0-a0d0-cd23adb00c27",
+                            Id = "2add8c6a-eae2-4291-991f-d7d747b995cd",
                             Name = "User",
                             NormalizedName = "USER"
                         });

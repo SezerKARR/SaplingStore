@@ -115,7 +115,7 @@ builder.Services.AddScoped<SaplingRepository>();
 builder.Services.AddScoped<SaplingCategoryRepository>();
 builder.Services.AddScoped<SaplingHeightRepository>();
 builder.Services.AddScoped<ImageRepository>();
-
+builder.Services.AddScoped<DataImporter>();
 builder.Services.AddScoped<SeedDataGeneric>();
 if (builder.Environment.IsDevelopment())
 {

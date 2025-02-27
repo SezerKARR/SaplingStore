@@ -6,57 +6,64 @@ using DTOs.SaplingHeightDto;
 
     public static class DtoTypesManager
     {
-        // Sapling için DTO türlerini saklayan bir sözlük
-        private static readonly Dictionary<string, Type> SaplingDtoTypes = new Dictionary<string, Type>
+       private static readonly Dictionary<string, Dictionary<string, Type>> DtoTypes = new Dictionary<string, Dictionary<string, Type>>
+    {
         {
-            { "CreateDto", typeof(SaplingCreateDto) },
-            { "UpdateDto", typeof(SaplingUpdateDto) },
-            { "ReadDto", typeof(SaplingReadDto) }
-        };
-
-        // Tree için DTO türlerini saklayan bir sözlük
-        private static readonly Dictionary<string, Type> SaplingCategoryDtoTypes = new Dictionary<string, Type>
-        {
-            { "CreateDto", typeof(SaplingCategoryCreateDto) },
-            { "UpdateDto", typeof(SaplingCategoryUpdateDto) },
-            { "ReadDto", typeof(SaplingCategoryReadDto) }
-        };
-
-        // Plant için DTO türlerini saklayan bir sözlük
-        private static readonly Dictionary<string, Type> SaplingHeightCategoryDtoTypes = new Dictionary<string, Type>
-        {
-            { "CreateDto", typeof(SaplingHeightCreateDto) },
-            { "UpdateDto", typeof(SaplingHeightUpdateDto) },
-            { "ReadDto", typeof(SaplingHeightReadDto) }
-        };
-
-        // DTO türlerini almak için genel bir metot
-        public static Dictionary<string, Type> GetDtoTypes(string entityName)
-        {
-            switch (entityName)
+            "Sapling", new Dictionary<string, Type>
             {
-                case "Sapling":
-                    return SaplingDtoTypes;
-                case "SaplingCategory":
-                    return SaplingCategoryDtoTypes;
-                case "SaplingHeight":
-                    return SaplingHeightCategoryDtoTypes;
-                default:
-                    throw new ArgumentException($"Entity '{entityName}' için DTO türleri bulunamadı.");
+                {"Entity", typeof(Sapling)},
+                {"CreateDto", typeof(SaplingCreateDto)},
+                {"UpdateDto", typeof(SaplingUpdateDto)},
+                {"ReadDto", typeof(SaplingReadDto)}
+            }
+        },
+        {
+            "SaplingCategory", new Dictionary<string, Type>
+            {
+                {"Entity", typeof(SaplingCategory)},
+                {"CreateDto", typeof(SaplingCategoryCreateDto)},
+                {"UpdateDto", typeof(SaplingCategoryUpdateDto)},
+                {"ReadDto", typeof(SaplingCategoryReadDto)}
+            }
+        },
+        {
+            "SaplingHeight", new Dictionary<string, Type>
+            {
+                {"Entity", typeof(SaplingHeight)},
+                {"CreateDto", typeof(SaplingHeightCreateDto)},
+                {"UpdateDto", typeof(SaplingHeightUpdateDto)},
+                {"ReadDto", typeof(SaplingHeightReadDto)}
             }
         }
-        public static Type GetCreateDtoType(string entityName) {
-            switch (entityName)
-            {
-                case "Sapling":
-                    return SaplingDtoTypes["CreateDto"];
-                case "SaplingCategory":
-                    return SaplingCategoryDtoTypes["CreateDto"];
-                case "SaplingHeight":
-                    return SaplingHeightCategoryDtoTypes["CreateDto"];
-                default:
-                    throw new ArgumentException($"Entity '{entityName}' için DTO türleri bulunamadı.");
-            }
+    };
+
+    // DTO türlerini almak için genel bir metot
+    public static Dictionary<string, Type> GetDtoTypes(string entityName)
+    {
+        if (DtoTypes.TryGetValue(entityName, out var dtoTypes))
+        {
+            return dtoTypes;
         }
+        throw new ArgumentException($"Entity '{entityName}' için DTO türleri bulunamadı.");
+    }
+
+    // Belirli bir DTO türünü almak için genel bir metot
+    public static Type GetDtoType(string entityName, string dtoTypeName)
+    {
+        if (DtoTypes.TryGetValue(entityName, out var dtoTypes) && dtoTypes.TryGetValue(dtoTypeName, out var dtoType))
+        {
+            return dtoType;
+        }
+        throw new ArgumentException($"Entity '{entityName}' için '{dtoTypeName}' DTO türü bulunamadı.");
+    }
+    public static List<string> GetEntities() {
+        return DtoTypes.Keys.ToList();
+    }
+
+    // CreateDto türünü almak için özel bir metot
+    public static Type GetCreateDtoType(string entityName)
+    {
+        return GetDtoType(entityName, "CreateDto");
+    }
     }
 

@@ -58,7 +58,7 @@ public abstract class ClassRepository<TEntity> : IClassRepository<TEntity> where
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {        
         Console.WriteLine(entity.Name);
-
+        entity.Slug = SlugHelper.GenerateSlug(entity.Name);
         await AddjustEntity(entity);
         Console.WriteLine(entity.Id);
         await _dbSet.AddAsync(entity);

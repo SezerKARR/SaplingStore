@@ -7,7 +7,7 @@
 namespace SaplingStore.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class seed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,20 +15,20 @@ namespace SaplingStore.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "936a14cf-4ec4-4af9-9ee0-2d0def77b7a6");
+                keyValue: "4ebce4b4-8c2e-449b-9d5f-c48e8ce7afe4");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "d9ac2395-1d3b-4d61-a22b-6f86a30b4bd2");
+                keyValue: "dfad9709-2d86-4ec2-878d-ade7fe8afda6");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "81386ed7-8ae4-467e-9b43-af1925f0e623", null, "User", "USER" },
-                    { "f8c21515-145f-45b6-a7c0-d31eef1679e4", null, "Admin", "ADMIN" }
+                    { "2add8c6a-eae2-4291-991f-d7d747b995cd", null, "User", "USER" },
+                    { "39ae86cb-35e1-4e84-916e-e0fc74c64fa5", null, "Admin", "ADMIN" }
                 });
         }
 
@@ -38,20 +38,20 @@ namespace SaplingStore.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "81386ed7-8ae4-467e-9b43-af1925f0e623");
+                keyValue: "2add8c6a-eae2-4291-991f-d7d747b995cd");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "f8c21515-145f-45b6-a7c0-d31eef1679e4");
+                keyValue: "39ae86cb-35e1-4e84-916e-e0fc74c64fa5");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "936a14cf-4ec4-4af9-9ee0-2d0def77b7a6", null, "User", "USER" },
-                    { "d9ac2395-1d3b-4d61-a22b-6f86a30b4bd2", null, "Admin", "ADMIN" }
+                    { "4ebce4b4-8c2e-449b-9d5f-c48e8ce7afe4", null, "Admin", "ADMIN" },
+                    { "dfad9709-2d86-4ec2-878d-ade7fe8afda6", null, "User", "USER" }
                 });
         }
     }

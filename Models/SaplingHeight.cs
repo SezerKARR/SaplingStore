@@ -13,4 +13,5 @@ public class SaplingHeight:Entity {
     public float Height { get; set; }
     public string ImageUrl { get; set; }
     public int SaplingMoney { get; set; }
+    public IFormFile[]? Images { get; set; }
 }

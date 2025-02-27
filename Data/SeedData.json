@@ -1,5 +1,5 @@
 {
-  "sapling": [
+  "Sapling": [
     {
       "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLKHm-ithK-lbgcFfyq5Lph9HVjjpRDc_R7g\u0026s",
       "SaplingCategoryId": 1,
@@ -27,14 +27,14 @@
       "Name": "string"
     }
   ],
-  "saplingHeight": [
+  "SaplingHeight": [
     {
       "Height": 0,
       "ImageUrl": "https://i0.shbdn.com/photos/23/62/80/x5_1227236280b41.jpg",
       "SaplingId": 2,
-      "SaplingMoney": 0,
+      "SaplingMoney": 1,
       "Id": 1,
-      "Name": ""
+      "Name": "asd"
     },
     {
       "Height": 0,
@@ -53,7 +53,7 @@
       "Name": ""
     }
   ],
-  "saplingCategory": [
+  "SaplingCategory": [
     {
       "ImageUrl": "https://ideacdn.net/shop/hr/14/myassets/products/125/tuplu-cit-mazi-fidani-984-png.png?revision=1697143329",
       "Id": 1,

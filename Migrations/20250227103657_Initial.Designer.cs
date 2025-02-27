@@ -12,7 +12,7 @@ using SaplingStore.Data;
 namespace SaplingStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219084043_Initial")]
+    [Migration("20250227103657_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -53,13 +53,13 @@ namespace SaplingStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f8c21515-145f-45b6-a7c0-d31eef1679e4",
+                            Id = "4ebce4b4-8c2e-449b-9d5f-c48e8ce7afe4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "81386ed7-8ae4-467e-9b43-af1925f0e623",
+                            Id = "dfad9709-2d86-4ec2-878d-ade7fe8afda6",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -235,6 +235,38 @@ namespace SaplingStore.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SaplingStore.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("SaplingStore.Models.Sapling", b =>
                 {
                     b.Property<int>("Id")
@@ -327,31 +359,6 @@ namespace SaplingStore.Migrations
                     b.HasIndex("SaplingId");
 
                     b.ToTable("saplingHeights");
-                });
-
-            modelBuilder.Entity("SaplingStore.Models.TestEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Namasdasde")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestEntities");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
